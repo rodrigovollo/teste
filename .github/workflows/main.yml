@@ -1,0 +1,36 @@
+name: Deploy Docker Image to Server
+
+on:
+  push:
+    branches:
+      - main  # Executa o deploy ao dar push no branch main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Etapa 1: Checkout do código
+    - name: Check out the repository
+      uses: actions/checkout@v3
+
+    # Etapa 2: Configurar SSH
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    # Etapa 3: Construir a imagem Docker
+    - name: Build Docker image
+      run: |
+        docker build -t my-python-app .
+
+    # Etapa 4: Copiar a imagem Docker para o servidor remoto
+    - name: Copy Docker image to server
+      run: |
+        docker save my-python-app | bzip2 | ssh -o StrictHostKeyChecking=no user@${{ secrets.SERVER_IP }} 'bunzip2 | docker load'
+
+    # Etapa 5: Rodar o container no servidor remoto
+    - name: Run Docker container on server
+      run: |
+        ssh -o StrictHostKeyChecking=no user@${{ secrets.SERVER_IP }} 'docker run -d -p 5000:5000 my-python-app'
