@@ -28,9 +28,9 @@ jobs:
     # Etapa 4: Copiar a imagem Docker para o servidor remoto
     - name: Copy Docker image to server
       run: |
-        docker save my-python-app | bzip2 | ssh -o StrictHostKeyChecking=no user@${{ secrets.SERVER_IP }} 'bunzip2 | docker load'
+        docker save my-python-app | bzip2 | ssh -o StrictHostKeyChecking=no aluno@201.23.3.86 'bunzip2 | docker load'
 
     # Etapa 5: Rodar o container no servidor remoto
     - name: Run Docker container on server
       run: |
-        ssh -o StrictHostKeyChecking=no user@${{ secrets.SERVER_IP }} 'docker run -d -p 5000:5000 my-python-app'
+        ssh -o StrictHostKeyChecking=no aluno@201.23.3.86 'docker run -d -p 5000:5000 my-python-app'
