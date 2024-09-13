@@ -33,4 +33,4 @@ jobs:
     # Etapa 5: Rodar o container no servidor remoto
     - name: Run Docker container on server
       run: |
-        ssh -o StrictHostKeyChecking=no aluno@201.23.3.86 'docker run -d -p 5000:5000 my-python-app'
+        ssh -o StrictHostKeyChecking=no aluno@201.23.3.86 'docker run -d -p 80:80 my-python-app'
